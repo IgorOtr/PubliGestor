@@ -6,7 +6,7 @@
         <!--begin::Modal content-->
         <div class="modal-content">
             <!--begin::Form-->
-            <form action="{{ route('admin.publicidades.create') }}" method="POST" id="add_new_publi_form">
+            <form action="{{ route('admin.empresas.create') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <!--begin::Modal header-->
                 <div class="modal-header" id="kt_modal_new_address_header">
@@ -85,66 +85,13 @@
                             <div class="col-md-6 fv-row fv-plugins-icon-container">
                                 <div class="d-flex flex-column mb-5 fv-row fv-plugins-icon-container">
                                     <!--begin::Label-->
-                                    <label class="required fs-5 fw-semibold mb-2">Empresa</label>
+                                    <label class="fs-5 fw-semibold mb-2">Telefone</label>
                                     <!--end::Label-->
 
-                                    <div>
-                                        <select class="form-select form-select-solid" name="company_id">
-                                            <option value="">Selecione uma empresa</option>
-                                            <option value="1">Option 1</option>
-                                            <option value="2">Option 2</option>
-                                        </select>
-                                    </div>
-                                    <span class="fs-8 text-danger">Necessária a criação prévia da empresa.</span>
+                                    <input type="text" class="form-control form-control-solid" name="phone"
+                                        placeholder="Ex.: (11) 99999-9999">
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row g-9 mb-5">
-                            <div class="col-md-6 fv-row fv-plugins-icon-container">
-                                <label class="fs-5 fw-semibold mb-2">Prazo</label>
-                                <input type="date" class="form-control form-control-solid" name="deadline">
-                            </div>
-                            <div class="col-md-6 fv-row fv-plugins-icon-container">
-                                <label class="fs-5 fw-semibold mb-2">Vincular Contrato?</label>
-                                <div>
-                                    <select class="form-select form-select-solid" name="contract_id">
-                                        <option value="">Selecione um contrato</option>
-                                        <option value="1">Option 1</option>
-                                        <option value="2">Option 2</option>
-                                    </select>
-                                </div>
-                                <span class="fs-8 text-danger">Necessária a criação prévia do contrato.</span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-column mb-5 fv-row fv-plugins-icon-container">
-                            <label class="fs-5 fw-semibold mb-2">Deslocamento necessário até o local?</label>
-                            <div class="form-check form-switch form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" value="" id="addressToggleSwitch"
-                                    oninput="toggleAddressField()" />
-                                <label class="form-check-label" for="addressToggleSwitch">
-                                    Sim
-                                </label>
-                            </div>
-                        </div>
-                        <!--end::Input group-->
-
-                        <!--begin::Input group-->
-                        <div class="row g-9 mb-5 d-none" id="new_publi_address_field">
-                            <!--begin::Col-->
-                            <div class="col-md-12 fv-row fv-plugins-icon-container">
-                                <!--begin::Label-->
-                                <label class="required fs-5 fw-semibold mb-2">Endereço</label>
-                                <!--end::Label-->
-
-                                <!--begin::Input-->
-                                <input type="text" class="form-control form-control-solid"
-                                    id="new_publi_address_input" placeholder="Ex.: Rua XYZ, 123, Bairro ABC, Cidade 456"
-                                    name="address">
-                                <!--end::Input-->
-                            </div>
-                            <!--end::Col-->
                         </div>
                     </div>
                     <!--end::Scroll-->
@@ -161,8 +108,7 @@
                     <!--end::Button-->
 
                     <!--begin::Button-->
-                    <button type="submit" class="btn btn-primary"
-                        onclick="disableToSubmit(this, 'add_new_publi_form')">
+                    <button type="submit" class="btn btn-primary">
                         Criar
                     </button>
                     <!--end::Button-->
@@ -187,6 +133,20 @@
 
 
             <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+
+                @if ($errors->any())
+                    <div class="alert alert-dismissible bg-danger d-flex align-items-center p-5 mb-10 w-30"
+                        style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+                        <div class="d-flex flex-column text-light pe-0 pe-sm-10">
+                            <h4 class="mb-2 text-light text-center">Atenção</h4>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li class="light">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
 
                 <div class="d-flex flex-column flex-column-fluid">
 
@@ -238,7 +198,7 @@
                                                 <div class="fs-4 fw-bold pb-3 border-bottom border-3 border-primary cursor-pointer"
                                                     data-kt-table-widget-3="tab"
                                                     data-kt-table-widget-3-value="Show All">
-                                                    Todas as Publicidades ({{ $empresas->count() }})
+                                                    Todas as Empresas ({{ $empresas->count() }})
                                                 </div>
                                                 <!--end::Tab item-->
                                             </div>
@@ -274,10 +234,21 @@
                                                         <tbody>
                                                             @foreach ($empresas as $empresa)
                                                                 <tr>
-                                                                    <td>
+                                                                    <td class="text-center">
                                                                         <div class="symbol symbol-50px me-2">
-                                                                            <span class="symbol-label"
-                                                                                style="background-image:url('{{ $empresa->logo_url }}')"></span>
+                                                                            @if ($empresa->logo)
+                                                                                <span class="symbol-label" style="background-image:url('{{ 'http://localhost:8088/storage/'.$empresa->logo }}')"></span>
+                                                                            @else
+                                                                                <span class="symbol-label">
+                                                                                    <i class="ki-duotone ki-shop fs-1">
+                                                                                        <span class="path1"></span>
+                                                                                        <span class="path2"></span>
+                                                                                        <span class="path3"></span>
+                                                                                        <span class="path4"></span>
+                                                                                        <span class="path5"></span>
+                                                                                    </i>
+                                                                                </span>
+                                                                            @endif
                                                                         </div>
                                                                     </td>
                                                                     <td>
@@ -295,7 +266,7 @@
                                                                     </td>
                                                                     <td>
                                                                         <span
-                                                                            class="text-gray-900 text-hover-primary fw-bold">{{ $empresa->phone }}
+                                                                            class="text-gray-900 text-hover-primary fw-bold">{{ $empresa->phone ?? 'Não Informado' }}
                                                                         </span>
                                                                     </td>
                                                                     <td>
@@ -314,16 +285,19 @@
                                                                         </span>
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button"
+                                                                        <a href="{{ route('admin.empresas.show', ['id' => $empresa->id]) }}"
                                                                             class="btn btn-icon btn-sm btn-light btn-active-primary w-25px h-25px">
                                                                             <i
                                                                                 class="ki-duotone ki-black-right fs-2 text-muted"></i>
-                                                                        </button>
+                                                                        </a>
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
                                                     </table>
+                                                    <div class="d-flex justify-content-end">
+                                                        {{ $empresas->links('pagination::bootstrap-5') }}
+                                                    </div>
                                                 </div>
                                             @else
                                                 <div class="d-flex flex-column align-items-center text-center py-10">
@@ -331,7 +305,7 @@
                                                         <span class="path1"></span><span class="path2"></span><span
                                                             class="path3"></span>
                                                     </i>
-                                                    <h3 class="text-gray-900 fw-bold mb-2">Nenhuma publicidade
+                                                    <h3 class="text-gray-900 fw-bold mb-2">Nenhuma empresa
                                                         encontrada</h3>
                                                 </div>
                                             @endif

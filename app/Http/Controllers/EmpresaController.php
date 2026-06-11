@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Empresa\StoreEmpresaRequest;
 use App\Http\Requests\Empresa\UpdateEmpresaRequest;
+use App\Http\Requests\Empresa\DeleteEmpresaRequest;
 use Illuminate\Http\Request;
 use App\Services\Empresa\EmpresaService;
 
@@ -31,12 +32,18 @@ class EmpresaController extends Controller
     public function createEmpresa(StoreEmpresaRequest $request)
     {
         $empresa = $this->empresaService->createEmpresa($request->validated());
-        return redirect()->route('admin.empresas.single-empresa', ['id' => $empresa->id]);
+        return redirect()->route('admin.empresas.show', ['id' => $empresa->id]);
     }
 
     public function updateEmpresa(UpdateEmpresaRequest $request)
     {
         $empresa = $this->empresaService->updateEmpresa($request->validated());
-        return redirect()->route('admin.empresas.single-empresa', ['id' => $empresa->id]);
+        return redirect()->route('admin.empresas.show', ['id' => $empresa->id]);
+    }
+
+    public function deleteEmpresa(DeleteEmpresaRequest $request)
+    {
+        $this->empresaService->deleteEmpresa($request->validated());
+        return redirect()->route('admin.empresas');
     }
 }

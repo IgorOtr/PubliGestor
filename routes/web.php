@@ -21,6 +21,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::prefix('empresas')->group(function () {
         Route::get('/', [EmpresaController::class, 'allEmpresas'])->name('admin.empresas');
         Route::get('/{id}', [EmpresaController::class, 'findEmpresa'])->name('admin.empresas.show');
+        Route::post('/', [EmpresaController::class, 'createEmpresa'])->name('admin.empresas.create');
+        Route::put('/', [EmpresaController::class, 'updateEmpresa'])->name('admin.empresas.update');
+        Route::delete('/', [EmpresaController::class, 'deleteEmpresa'])->name('admin.empresas.delete');
     });
 });
 

@@ -9,7 +9,7 @@ class EmpresaService
 
     public function allEmpresas()
     {
-        return Empresa::with('publicidades', 'contratos')->get();
+        return Empresa::with('publicidades', 'contratos')->orderBy('created_at', 'desc')->paginate(5);
     }
 
     public function findEmpresa(string $id)
@@ -25,13 +25,14 @@ class EmpresaService
 
     public function createEmpresa(array $data)
     {
-        $logo = $data['logo'] ? $this->uploadLogo($data['logo']) : null;
+        $logo = !empty($data['logo']) ? $this->uploadLogo($data['logo']) : null;
 
         $empresa = Empresa::create([
             'name' => $data['name'],
             'logo' => $logo,
             'phone' => $data['phone'] ?? null,
         ]);
+
         return $empresa;
     }
 
@@ -54,5 +55,11 @@ class EmpresaService
 
         $empresa->save();
         return $empresa;
+    }
+
+    public function deleteEmpresa(array $data)
+    {
+        $empresa = $this->findEmpresa($data['company_id']);
+        $empresa->delete();
     }
 }

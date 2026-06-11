@@ -86,8 +86,9 @@
                                     <div>
                                         <select class="form-select form-select-solid" name="company_id">
                                             <option value="">Selecione uma empresa</option>
-                                            <option value="1">Option 1</option>
-                                            <option value="2">Option 2</option>
+                                            @foreach ($empresas as $empresa)
+                                                <option value="{{ $empresa->id }}">{{ $empresa->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <span class="fs-8 text-danger">Necessária a criação prévia da empresa.</span>

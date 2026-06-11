@@ -5,8 +5,9 @@ namespace App\Http\Requests\Empresa;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateEmpresaRequest extends FormRequest
+class DeleteEmpresaRequest extends FormRequest
 {
+
     public function authorize(): bool
     {
         return auth()->check();
@@ -15,10 +16,7 @@ class UpdateEmpresaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => 'required|exists:empresas,id',
-            'name' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'phone' => 'nullable|string|max:255',
+            'company_id' => ['required', 'exists:empresas,id'],
         ];
     }
 }
